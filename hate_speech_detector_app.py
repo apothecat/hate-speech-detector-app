@@ -12,29 +12,41 @@ from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
 
 st.title("Hate Speech Detection App")
 
-# Get input from the user
+# Single tweet classification
+# Set subheader
+#st.subheader('Single tweet classification')
 
-hs_text = st.text_area("Enter Text","Type Here")
+# Get input from the user
+hs_text = st.text_area("Enter Text")
 
 # Load vectorizer
 
+#with st.spinner('Loading vectorizer...'):
 hs_vectorizer = open("vect.pkl", "rb")
 hs_tfidf=joblib.load(hs_vectorizer)
 
 # Load classification model
 # "rb" mode opens the file in binary format for reading
-# with st.spinner('Loading classification model...'):
+#with st.spinner('Loading classification model...'):
 model= open("hsmod.pkl", "rb")
 hsmod_clf=joblib.load(model)
 
-#st.info("Prediction with ML")
+# Add prediction labels
+
+#prediction_labels = {0:'Not Hate Speech', 1:'Hate Speech'}
+
+# Predict and display results
 
 if st.button("Classify"):
-	st.text("Original text :\n{}".format(hs_text))
+	#st.text("Original text :\n{}".format(hs_text))
 	vect_text = hs_tfidf.transform([hs_text]).toarray()
 	prediction = hsmod_clf.predict(vect_text)
-	st.write(prediction[0])
-
+	#st.write(prediction[0])
+	#final_result = prediction_labels[prediction[0]]
+	if prediction[0] == 0:
+		st.success("Text categorized as: Not Hate Speech")
+	if prediction[0] == 1:
+		st.error("Text categorized as: Hate Speech")
 
 #Preprocessing function
 

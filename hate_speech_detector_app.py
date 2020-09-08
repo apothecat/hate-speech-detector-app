@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import joblib
 from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
+import os
+import pandas as pd
 #import re
 #import string
 #nltk.download('stopwords')
@@ -14,7 +16,8 @@ st.title("Hate Speech Detection App")
 
 # Single tweet classification
 # Set subheader
-#st.subheader('Single tweet classification')
+# https://blog.jcharistech.com/2019/11/14/building-a-news-classifier-machine-learning-app-with-streamlit/
+st.subheader('Single tweet classification')
 
 # Get input from the user
 hs_text = st.text_area("Enter Text")
@@ -37,7 +40,7 @@ hsmod_clf=joblib.load(model)
 
 # Predict and display results
 
-if st.button("Classify"):
+if st.button("Classify Tweet"):
 	#st.text("Original text :\n{}".format(hs_text))
 	vect_text = hs_tfidf.transform([hs_text]).toarray()
 	prediction = hsmod_clf.predict(vect_text)
@@ -49,5 +52,24 @@ if st.button("Classify"):
 	if prediction[0] == 1:
 		st.error(" Hate Speech ({} % probability)".format(round(probability[0][1]*100),0))
 
+# https://discuss.streamlit.io/t/upload-files-to-streamlit-app/80
+
+st.subheader('Classify a data set')
+filename = st.text_input('Enter a csv file path:')
+
+#filename = 'hateval2019_en_dev.csv'
+@st.cache
+def get_data():
+    return pd.read_csv(filename)
+
+if st.button("Classify Data Set"):
+	df = get_data()
+	tweets = df['text'][0]
+	st.write(tweets)
+
+#if filename != '':
+#	with open(filename) as input:
+#		st.text(input.read())
+#all_data = pd.read_csv(filename)
 
 

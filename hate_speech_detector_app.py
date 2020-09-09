@@ -5,7 +5,8 @@ import os
 import pandas as pd
 from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
-
+from twitterscraper import query_tweets
+import datetime as dt
 
 st.title("Hate Speech Detection App")
 
@@ -47,9 +48,9 @@ if st.button("Classify Tweet"):
 
 		st.error(" Hate Speech ({} % probability)".format(round(probability[0][1]*100),0))
 
-# https://discuss.streamlit.io/t/upload-files-to-streamlit-app/80
+# Twitter Query
 # https://medium.com/analytics-vidhya/building-a-twitter-sentiment-analysis-app-using-streamlit-d16e9f5591f8
-
+           
 # Data set classification.
 
 st.subheader('Data Set Classification')

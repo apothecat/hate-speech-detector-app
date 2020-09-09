@@ -4,6 +4,8 @@ import joblib
 from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
 import os
 import pandas as pd
+from wordcloud import WordCloud, STOPWORDS
+import matplotlib.pyplot as plt
 #import re
 #import string
 #nltk.download('stopwords')
@@ -20,7 +22,7 @@ st.title("Hate Speech Detection App")
 st.subheader('Single tweet classification')
 
 # Get input from the user
-hs_text = st.text_area("Enter Text")
+hs_text = st.text_area("Enter Text", "I love you")
 
 # Load vectorizer
 
@@ -53,23 +55,63 @@ if st.button("Classify Tweet"):
 		st.error(" Hate Speech ({} % probability)".format(round(probability[0][1]*100),0))
 
 # https://discuss.streamlit.io/t/upload-files-to-streamlit-app/80
+# https://medium.com/analytics-vidhya/building-a-twitter-sentiment-analysis-app-using-streamlit-d16e9f5591f8
 
 st.subheader('Classify a data set')
-filename = st.text_input('Enter a csv file path:')
+filename = st.text_input('Enter a csv file path:', 'hateval2019_en_dev.csv')
 
 #filename = 'hateval2019_en_dev.csv'
 @st.cache
 def get_data():
     return pd.read_csv(filename)
 
+# Initialize empty dataframe
+
+tweet_data = pd.DataFrame({
+	'text': [],
+	'HS': []
+	})
+
 if st.button("Classify Data Set"):
 	df = get_data()
-	tweets = df['text'][0]
-	st.write(tweets)
+	tweets = df['text']
+	#st.write(tweets)
 
-#if filename != '':
-#	with open(filename) as input:
-#		st.text(input.read())
-#all_data = pd.read_csv(filename)
+	# Add data for each tweet
+	for tweet in tweets:
+		if tweet in ('', ' '):
+			continue
+		vect_tweet = hs_tfidf.transform([tweet]).toarray()
+		prediction = hsmod_clf.predict(vect_tweet)
+		tweet_data = tweet_data.append({'text': tweet, 'HS': prediction[0]}, ignore_index=True)
+
+	#st.table(tweet_data[tweet_data.HS == 1]['text'])
+	stopwords = set(STOPWORDS)
+	hate_speech = tweet_data[tweet_data.HS == 1]['text']
+
+	wordcloud = WordCloud(
+		background_color='white',
+		stopwords=stopwords,
+		max_words=200,
+		max_font_size=100, 
+		scale=3,
+		random_state=1
+		).generate(str(hate_speech))
+	fig = plt.figure(1, figsize=(12, 12))
+	plt.axis('off')
+	plt.imshow(wordcloud)
+	st.pyplot()
+
+	st.table(hate_speech[0:50])
+
+#features = hs_tfidf.get_feature_names()
+#st.write(features)
+
+#vect_tweets = hs_tfidf.transform([tweets]).toarray()
+
+#freqs = zip(features,vect_tweets.sum(axis=0).tolist()[0])
+#st.write(freqs)
+
+
 
 

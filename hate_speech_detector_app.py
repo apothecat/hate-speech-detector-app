@@ -1,12 +1,8 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import os
-import pandas as pd
 from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
-from twitterscraper import query_tweets
-import datetime as dt
 
 st.title("Hate Speech Detection App")
 
@@ -15,7 +11,6 @@ st.title("Hate Speech Detection App")
 
 # Single tweet classification
 # Set subheader
-# https://blog.jcharistech.com/2019/11/14/building-a-news-classifier-machine-learning-app-with-streamlit/
 st.subheader('Single tweet classification')
 
 # Get input from the user
@@ -47,10 +42,7 @@ if st.button("Classify Tweet"):
 	if prediction[0] == 1:
 
 		st.error(" Hate Speech ({} % probability)".format(round(probability[0][1]*100),0))
-
-# Twitter Query
-# https://medium.com/analytics-vidhya/building-a-twitter-sentiment-analysis-app-using-streamlit-d16e9f5591f8
-           
+          
 # Data set classification.
 
 st.subheader('Data Set Classification')
@@ -87,6 +79,17 @@ if st.button("Classify Data Set"):
 		stopwords = set(STOPWORDS)
 		hate_speech = tweet_data[tweet_data.HS == 1]['text']
 
+		# Table of classifed tweets
+
+		#st.table(hate_speech[0:50]) # Show tweets classfied as hate speech only
+		st.table(tweet_data[:20]) # All tweets
+
+		# Download tweet_data as csv
+
+		# Add code here
+
+		# Hate speech word cloud
+
 		wordcloud = WordCloud(
 			background_color='white',
 			stopwords=stopwords,
@@ -98,11 +101,9 @@ if st.button("Classify Data Set"):
 		fig = plt.figure(1, figsize=(12, 12))
 		plt.axis('off')
 		plt.imshow(wordcloud)
-		st.pyplot()
+		st.pyplot(fig)
 
-		# Table of tweets classifed as hate speech
 
-		st.table(hate_speech[0:50])
 
 
 

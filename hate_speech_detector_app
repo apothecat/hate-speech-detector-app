@@ -1,9 +1,0 @@
-import streamlit as st
-import pandas as pd
-import joblib
-# from PIL import Image
-
-#Loading Our final trained Knn model 
-model= open("Knn_Classifier.pkl", "rb")
-knn_clf=joblib.load(model)
-st.title("Hate Speech Detection App")

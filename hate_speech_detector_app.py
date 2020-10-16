@@ -1,20 +1,27 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import joblib
 from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
 
-st.title("Hate Speech Detection App")
+st.title("Hate Speech Detection Dashboard")
+
+st.header('About')
+st.markdown('*	A prototype type for a hate speech detection dashboard.\n*	Built on a machine learning model designed to detect hate speech against immigrants and women on Twitter.')
+
+
 
 # Set page title
 
 
 # Single tweet classification
 # Set subheader
-st.subheader('Single tweet classification')
+st.header('Single tweet classification')
+st.markdown('Try out the classification algorithm:')
 
 # Get input from the user
-hs_text = st.text_area("Enter Text", "I love Manchester")
+hs_text = st.text_area('Enter text here and click below to classify.', value='#westandtogether')
 
 # Load vectorizer
 # "rb" mode opens the file in binary format for reading
@@ -45,9 +52,10 @@ if st.button("Classify Tweet"):
           
 # Data set classification.
 
-st.subheader('Data Set Classification')
+st.header('Data Set Classification')
+st.markdown('*	Classifies a data set in the form of a csv file.\n* Three example files are currently available for testing: dataset1.csv, dataset2.csv and dataset3.csv\n*	Future versions of the application will include the ability to upload dataset files.\n*	Warning: the datasets contain content that some readers may find offennsive or disturbing.')
 
-filename = st.text_input('Enter a csv file path:', 'hateval2019_en_dev.csv')
+filename = st.text_input('Enter a filename:', 'dataset1.csv')
 
 #@st.cache
 def get_data():
@@ -79,17 +87,9 @@ if st.button("Classify Data Set"):
 		stopwords = set(STOPWORDS)
 		hate_speech = tweet_data[tweet_data.HS == 1]['text']
 
-		# Table of classifed tweets
+				# Hate speech word cloud
 
-		#st.table(hate_speech[0:50]) # Show tweets classfied as hate speech only
-		st.table(tweet_data[:20]) # All tweets
-
-		# Download tweet_data as csv
-
-		# Add code here
-
-		# Hate speech word cloud
-
+		st.subheader("Hate Speech Cloud")
 		wordcloud = WordCloud(
 			background_color='white',
 			stopwords=stopwords,
@@ -102,6 +102,26 @@ if st.button("Classify Data Set"):
 		plt.axis('off')
 		plt.imshow(wordcloud)
 		st.pyplot(fig)
+
+		# Table of classifed tweets
+
+		st.subheader("Classification Table")
+		#st.table(hate_speech[0:50]) # Show tweets classfied as hate speech only
+		tweet_data['Hate Speech?'] = np.where(tweet_data['HS']==0, 'No', 'Yes')
+		#tweet_data.columns = ['Tweet', 'Hate Speech?']
+		classification_table = tweet_data[['text','Hate Speech?']]
+		classification_table.columns = ['Tweet', 'Hate Speech?']
+		#classification_table['HS2'] = np.where(classification_table['Hate Speech?']=='0', 'No', 'Yes')
+		#classification_table.reset_index(drop=True, inplace=True)
+		st.table(classification_table) # All tweets
+		#st.table(tweet_data) # All tweets
+		#st.table(tweet_data[:20]) # All tweets - top 20
+
+		# Download tweet_data as csv
+
+		# Add code here
+
+
 
 
 

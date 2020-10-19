@@ -51,7 +51,7 @@ if st.button("Classify Tweet"):
 # Data set classification.
 
 st.header('Data Set Classification')
-st.markdown('*	Classifies a data set in the form of a csv file.\n* Three example files are currently available for testing: dataset1.csv, dataset2.csv and dataset3.csv\n*	Future versions of the application will include the ability to upload dataset files.\n*	Warning: the datasets contain content that some users may find ofennsive or disturbing.')
+st.markdown('*	Classifies a data set in the form of a csv file.\n* Three example files are currently available for testing: dataset1.csv, dataset2.csv and dataset3.csv\n*	Future versions of the application will include the ability to upload dataset files.\n*	Warning: the datasets contain content that some users may find offensive or disturbing.')
 
 filename = st.text_input('Enter a filename:', 'dataset1.csv')
 
@@ -71,7 +71,7 @@ if st.button("Classify Data Set"):
 		df = get_data()
 		tweets = df['text'][0:1000]
 
-		# Add data for each tweet
+
 
 		for tweet in tweets:
 			if tweet in ('', ' '):

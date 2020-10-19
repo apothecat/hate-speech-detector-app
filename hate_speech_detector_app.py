@@ -8,12 +8,10 @@ import matplotlib.pyplot as plt
 st.title("Hate Speech Detection Dashboard")
 
 st.header('About')
-st.markdown('*	A prototype type for a hate speech detection dashboard.\n*	Built on a machine learning model designed to detect hate speech against immigrants and women on Twitter.')
-
+st.markdown('*	A prototype type for a hate speech detection dashboard.\n*	Built on a machine learning model designed to detect hate speech in Twitter data.')
 
 
 # Set page title
-
 
 # Single tweet classification
 # Set subheader
@@ -53,7 +51,7 @@ if st.button("Classify Tweet"):
 # Data set classification.
 
 st.header('Data Set Classification')
-st.markdown('*	Classifies a data set in the form of a csv file.\n* Three example files are currently available for testing: dataset1.csv, dataset2.csv and dataset3.csv\n*	Future versions of the application will include the ability to upload dataset files.\n*	Warning: the datasets contain content that some readers may findfennsive or disturbing.')
+st.markdown('*	Classifies a data set in the form of a csv file.\n* Three example files are currently available for testing: dataset1.csv, dataset2.csv and dataset3.csv\n*	Future versions of the application will include the ability to upload dataset files.\n*	Warning: the datasets contain content that some users may find ofennsive or disturbing.')
 
 filename = st.text_input('Enter a filename:', 'dataset1.csv')
 
@@ -82,12 +80,10 @@ if st.button("Classify Data Set"):
 			prediction = hsmod_clf.predict(vect_tweet)
 			tweet_data = tweet_data.append({'text': tweet, 'HS': prediction[0]}, ignore_index=True)
 
-		# Wordcloud for tweets classified as hate speech
+		# Hate speech word cloud
 
 		stopwords = set(STOPWORDS)
 		hate_speech = tweet_data[tweet_data.HS == 1]['text']
-
-				# Hate speech word cloud
 
 		st.subheader("Hate Speech Cloud")
 		wordcloud = WordCloud(
@@ -106,22 +102,11 @@ if st.button("Classify Data Set"):
 		# Table of classifed tweets
 
 		st.subheader("Classification Table")
-		#st.table(hate_speech[0:50]) # Show tweets classfied as hate speech only
 		tweet_data['Hate Speech?'] = np.where(tweet_data['HS']==0, 'No', 'Yes')
-		#tweet_data.columns = ['Tweet', 'Hate Speech?']
 		classification_table = tweet_data[['text','Hate Speech?']]
 		classification_table.columns = ['Tweet', 'Hate Speech?']
-		#classification_table['HS2'] = np.where(classification_table['Hate Speech?']=='0', 'No', 'Yes')
-		#classification_table.reset_index(drop=True, inplace=True)
 		st.table(classification_table) # All tweets
-		#st.table(tweet_data) # All tweets
-		#st.table(tweet_data[:20]) # All tweets - top 20
-
-		# Download tweet_data as csv
-
-		# Add code here
-
-
+		#st.table(classification_table[:20]) # All tweets - top 20
 
 
 
